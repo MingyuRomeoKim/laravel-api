@@ -24,6 +24,5 @@ Route::prefix('v1')->group(function () {
     Route::prefix('tistory')->group(function (){
         Route::get('/',[\App\Http\Controllers\Api\TistoryController::class,'index'])->name('tistory.index');
         Route::get('/accessToken',[\App\Http\Controllers\Api\TistoryController::class,'accessToken'])->name('tistory.accessToken');
-        Route::get('/blogInfo',[\App\Http\Controllers\Api\TistoryController::class,'blogInfo'])->name('tistory.blogInfo');
     });
 });
