@@ -25,4 +25,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/',[\App\Http\Controllers\Api\TistoryController::class,'index'])->name('tistory.index');
         Route::get('/accessToken',[\App\Http\Controllers\Api\TistoryController::class,'accessToken'])->name('tistory.accessToken');
     });
+
+    Route::prefix('naver')->group(function (){
+       Route::get('/{keyword?}',[\App\Http\Controllers\Api\NaverController::class,'index'])->name('naver.index');
+    });
 });
