@@ -31,7 +31,7 @@ class YoutubeLibrary
     public function getYoutubeChannelId(string $channelName): ?string
     {
         $queryParams = ['forUsername' => $channelName];
-        $response = $this->youTube->channels->listChannels('id',$queryParams);
+        $response = $this->youTube->channels->listChannels('id', $queryParams);
 
         return $response['items'][0]['id'] ?? null;
     }
@@ -64,7 +64,6 @@ class YoutubeLibrary
 
         $response = $this->youTube->search->listSearch('snippet', $queryParams);
         $videoLists = array_merge($videoLists, $response['items']);
-
 
         do {
             if (count($videoLists) > $maxResults) {
@@ -108,7 +107,7 @@ class YoutubeLibrary
     /**
      * @param array|null $videoIds
      * @return array
-     * @description Youtube Video Id를 사용하여 디테일한 정보 가공하여 가져오기
+     * @description 대랑의 Youtube Video Id를 사용하여 디테일한 정보들 가공하여 가져오기
      */
     public function getYoutubeVideoDetails(?array $videoIds): array
     {
@@ -148,6 +147,32 @@ class YoutubeLibrary
         } catch (\Exception $exception) {
             dump($exception->getMessage());
         }
+
+        return $videos;
+    }
+
+    /**
+     * @param string $videoId
+     * @return array
+     * @description Youtube Video Id를 사용하여 디테일한 정보 가공하여 가져오기
+     */
+    public function getYoutubeVideoDetail(string $videoId): array
+    {
+        $response = $this->youTube->videos->listVideos('snippet,statistics', ['id' => $videoId]);
+        $videoDetail = $response['items'][0];
+        
+        $videos = [
+            'videoId' => $videoDetail['id'],
+            'url' => 'https://www.youtube.com/watch?v=' . $videoDetail['id'],
+            'title' => $videoDetail['snippet']['title'],
+            'description' => $videoDetail['snippet']['description'],
+            'thumbnail' => $videoDetail['snippet']['thumbnails']['high']['url'],
+            'publishTime' => date("Y-m-d H:i:s", strtotime($videoDetail["snippet"]["publishedAt"])),
+            'viewCount' => $videoDetail['statistics']['viewCount'],
+            'likeCount' => $videoDetail['statistics']['likeCount'],
+            'dislikeCount' => $videoDetail['statistics']['dislikeCount'],
+            'commentCount' => $videoDetail['statistics']['commentCount'],
+        ];
 
         return $videos;
     }
